@@ -1,4 +1,4 @@
-# CourseDownloader
+# Course Downloader
 
 ## About
 
@@ -26,7 +26,6 @@ This project is my attempt to create something usable and for my educational pur
     - <a href="https://pluralsight.com">Pluralsight.com</a>
     - <a href="https://edx.org">Edx.org</a>
     - <a href="https://coursera.org">Coursera.com</a>
-    - <a href="https://.com">Udemy.com</a>
 
     
     

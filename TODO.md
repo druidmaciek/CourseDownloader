@@ -11,4 +11,8 @@
     - Download Exercise Files
     - select which vids to download
     - password decryption
-
+3. Adding new sites:
+    - <a href="https://udemy.com">Udemy.com</a>
+    - <a href="https://pluralsight.com">Pluralsight.com</a>
+    - <a href="https://edx.org">Edx.org</a>
+    - <a href="https://coursera.org">Coursera.com</a>
