@@ -39,3 +39,4 @@ Thumbs.db
 # My extensions #
 #################
 .idea
+.DS_Store
