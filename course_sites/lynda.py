@@ -29,9 +29,12 @@ class Lynda(object):
         self.pwd = pwd
         self.gauge = gauge
         self.label = label
-        self.driver = webdriver.Chrome('{}/data/chromedriver'.format(os.getcwd()))
 
-        self.driver.get(course_url)
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        self.driver = webdriver.Chrome('{}/data/chromedriver'.format(os.getcwd()), chrome_options=options)
+        self.driver.set_window_size(2000, 2000)
+        self.driver.get(self.course_url)
         self.label.SetLabel("Logging in...")
         self.login()
         self.course_title = self.get_title()
@@ -109,11 +112,13 @@ class Lynda(object):
                      "source": video})
         # Close chromedriver
         self.driver.quit()
+
         return videos_data
 
     @staticmethod
     def download_vid(data):
         urllib.request.urlretrieve(data['source'], data['path'])
+        
 
     def download_vids(self):
         pool = Pool(cpu_count() * 4)

@@ -6,10 +6,15 @@
         - Remember last directory
         - Select which vids to download
 
+    BUGS:
+        - Program gets stuck when quitted while downloading (?) IS THIS STILL A ISSUE?
+        - Dosen't download on father's mac os x
+
 """
 from threading import Thread
 from validators import url
 from course_sites.lynda import Lynda
+from course_sites.pluralsight import Pluralsight
 import wx, wx.html
 import sys
 
@@ -18,11 +23,10 @@ for downloading whole video courses from premium and free sites
 with one click<br>Supported Sites: </p>
 <ul>
 <li><a href="https://lynda.com">Lynda.com</a></li>
+<li><a href="https://pluralsight.com">Pluralsight.com</a></li>
 </ul>
 <p>Sites to add: </p>
 <ul>
-<li><a href="https://udemy.com">Udemy.com</a></li>
-<li><a href="https://pluralsight.com">Pluralsight.com</a></li>
 <li><a href="https://edx.org">Edx.org</a></li>
 <li><a href="https://coursera.org">Coursera.com</a></li>
 <li><a href="https://.com">Udemy.com</a></li>
@@ -191,6 +195,16 @@ class Frame(wx.Frame):
         self.username, self.pwd = dlg.get_creds()
         dlg.Destroy()
 
+    def loginn(self):
+        """
+        Show login window to set username nad pwd values
+        """
+        self.logged = True
+        dlg = LoginDialog()
+        dlg.ShowModal()
+        self.username, self.pwd = dlg.get_creds()
+        dlg.Destroy()
+
     def OnDir(self, event):
         dialog = wx.DirDialog(None, "Choose a directory:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         if dialog.ShowModal() == wx.ID_OK:
@@ -223,14 +237,13 @@ class Frame(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_OK:
-                if 'lynda.' in text_url:
+                if 'lynda.' or '.pluralsight.' in text_url:
                     if self.username is None or self.pwd is None:
-                        dlg = wx.MessageDialog(self,
-                                               "Log in to your account using login button",
-                                               "Use not logged in", wx.OK | wx.ICON_QUESTION)
+                        dlg = wx.MessageDialog(self, "Please login into your account.",
+                                               "User not logged in", wx.OK | wx.ICON_QUESTION)
                         result = dlg.ShowModal()
                         dlg.Destroy()
-                        return
+                        self.loginn()
 
                 # Run the check_site function on separate thread
                 self.testThread = Thread(target=self.check_site)
@@ -272,8 +285,11 @@ class Frame(wx.Frame):
             self.t1.SetValue('')
             self.gauge.Pulse()
             self.course_site = Lynda(url_val, self.username, self.pwd, self.gauge, self.text, self.save_dir)
-
-        dlg = wx.MessageDialog(self, "All Files Downloaded.", "", wx.OK)
+        elif '.pluralsight.' in url_val:
+            self.t1.SetValue('')
+            self.gauge.Pulse()
+            self.course_site = Pluralsight(url_val, self.username, self.pwd, self.gauge, self.text, self.save_dir)
+        dlg = wx.MessageDialog(self, "All Files Downloaded.", "", wx.OK | wx.ICON_QUESTION)
         result = dlg.ShowModal()
         # dlg.Destroy()
         self.course_site = object

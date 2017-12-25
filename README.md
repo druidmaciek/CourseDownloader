@@ -8,6 +8,7 @@ This project is my attempt to create something usable and for my educational pur
 
 1. Supported sites:
     - <a href="https://lynda.com">Lynda.com</a>
+    - <a href="https://pluralsight.com">Pluralsight.com</a>
 2. Feauteres:
     - Set download directory
     - Gather all course videos url just course url
@@ -23,7 +24,6 @@ This project is my attempt to create something usable and for my educational pur
 3. Password encryption in datafile
 4. Sites to add:
     - <a href="https://udemy.com">Udemy.com</a>
-    - <a href="https://pluralsight.com">Pluralsight.com</a>
     - <a href="https://edx.org">Edx.org</a>
     - <a href="https://coursera.org">Coursera.com</a>
 

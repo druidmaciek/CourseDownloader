@@ -7,12 +7,13 @@
     - Remember last directory
     - Select which vids to download
     - Add password encryption
-2. course_sites.lynda:
+2. course_sites:
+    - Create Content file
     - Download Exercise Files
     - select which vids to download
     - password decryption
 3. Adding new sites:
     - <a href="https://udemy.com">Udemy.com</a>
-    - <a href="https://pluralsight.com">Pluralsight.com</a>
     - <a href="https://edx.org">Edx.org</a>
-    - <a href="https://coursera.org">Coursera.com</a>
+    - <a href="https://coursera.org">Coursera.org</a>
+    - <a href="https://skillshare.com">Skillshare.com</a>
