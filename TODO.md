@@ -16,6 +16,7 @@
     - lynda path url support
     - pluralsight path url support
     - Test Skillshare Class
+    - Finish Udemy Class
 3. Adding new sites:
     - <a href="https://udemy.com">Udemy.com</a>
     - <a href="https://edx.org">Edx.org</a>
