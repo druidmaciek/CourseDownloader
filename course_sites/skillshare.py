@@ -15,7 +15,7 @@ class Skillshare(object):
 
     def __init__(self, course_url, user, pwd, gauge, label, loc):
         """
-                :param course_url: URL of a course from Skillshare.com | Example: https://www.Skillshare.com/Leadership-Management-tutorials/Managing-Technical-Professionals/628686-2.html
+                :param course_url: URL of a course from Skillshare.com | Example:
                 :param user: username or email associated with Skillshare.com Account
                 :param pwd: password associated with Skillshare.com Account
                 :param gauge: wxPython Gauge object

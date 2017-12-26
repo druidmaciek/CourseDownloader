@@ -7,6 +7,7 @@
     - Remember last directory
     - Select which vids to download
     - Add password encryption
+    - Add Skillshare to GUI
 2. course_sites:
     - Create Content file
     - Download Exercise Files
@@ -14,6 +15,7 @@
     - password decryption
     - lynda path url support
     - pluralsight path url support
+    - Test Skillshare Class
 3. Adding new sites:
     - <a href="https://udemy.com">Udemy.com</a>
     - <a href="https://edx.org">Edx.org</a>

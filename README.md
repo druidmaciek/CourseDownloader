@@ -9,7 +9,7 @@ This project is my attempt to create something usable and for my educational pur
 1. Supported sites:
     - <a href="https://lynda.com">Lynda.com</a>
     - <a href="https://pluralsight.com">Pluralsight.com</a>
-2. Feauteres:
+2. Features:
     - Set download directory
     - Gather all course videos url just course url
     - Create folder structure based on index of the course
