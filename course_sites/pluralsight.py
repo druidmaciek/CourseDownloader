@@ -14,9 +14,9 @@ class Pluralsight(object):
 
     def __init__(self, course_url, user, pwd, gauge, label, loc):
         """
-        :param course_url: URL of a course from Lynda.com | Example: https://app.pluralsight.com/library/courses/understanding-machine-learning/table-of-contents
-        :param user: username or email associated with Lynda.com Account
-        :param pwd: password associated with Lynda.com Account
+        :param course_url: URL of a course from Pluralsight.com | Example: https://app.pluralsight.com/library/courses/understanding-machine-learning/table-of-contents
+        :param user: username or email associated with Pluralsight.com Account
+        :param pwd: password associated with Pluralsight.com Account
         :param gauge: wxPython Gauge object
         :param label: wxPython Label object
         :param loc: path for downloading files
@@ -83,7 +83,7 @@ class Pluralsight(object):
 
         videos_data = []
         for chapter in chapters:
-            chapter_title = chapter.find('h3').text.strip()
+            chapter_title = chapter.find('h3').text.strip().replace('/', '|')
             print(chapter_title)
 
             self.label.SetLabel(chapter_title)
@@ -99,7 +99,7 @@ class Pluralsight(object):
                 self.driver.get(vid[0])
                 sleep(2)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-                vid_title = vid[1]
+                vid_title = vid[1].replace('/', '|')
                 self.label.SetLabel(vid_title)
                 try:
                     video = soup.find('video')['src']

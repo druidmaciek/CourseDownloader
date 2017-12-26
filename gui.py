@@ -25,13 +25,7 @@ with one click<br>Supported Sites: </p>
 <li><a href="https://lynda.com">Lynda.com</a></li>
 <li><a href="https://pluralsight.com">Pluralsight.com</a></li>
 </ul>
-<p>Sites to add: </p>
-<ul>
-<li><a href="https://edx.org">Edx.org</a></li>
-<li><a href="https://coursera.org">Coursera.com</a></li>
-<li><a href="https://.com">Udemy.com</a></li>
-
-</ul>
+<br>
 <p>Version: 1.0.0<br>The program is running version
  %(wxpy)s of <b>wxPython</b> and %(python)s of <b>Python</b>.</p>"""
 

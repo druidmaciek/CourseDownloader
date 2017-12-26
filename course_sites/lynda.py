@@ -2,6 +2,7 @@
     TO-DO:
         - Download Exercise Files
         - select which vids to download
+        - Path URL support
 """
 from multiprocessing.pool import Pool
 from multiprocessing import cpu_count
@@ -104,7 +105,7 @@ class Lynda(object):
                 self.driver.get(vid)
                 sleep(1)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-                vid_title = soup.find('h1', {'itemprop': 'name'})['data-video'].strip()
+                vid_title = soup.find('h1', {'itemprop': 'name'})['data-video'].strip().replace('/', '|')
                 self.label.SetLabel(vid_title)
                 video = soup.find('video', {'class': 'player'})['data-src']
                 videos_data.append(

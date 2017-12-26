@@ -26,6 +26,7 @@ This project is my attempt to create something usable and for my educational pur
     - <a href="https://udemy.com">Udemy.com</a>
     - <a href="https://edx.org">Edx.org</a>
     - <a href="https://coursera.org">Coursera.com</a>
+    - <a href="https://skillshare.com">Skillshare.com</a>
 
     
     

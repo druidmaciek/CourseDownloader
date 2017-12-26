@@ -12,6 +12,8 @@
     - Download Exercise Files
     - select which vids to download
     - password decryption
+    - lynda path url support
+    - pluralsight path url support
 3. Adding new sites:
     - <a href="https://udemy.com">Udemy.com</a>
     - <a href="https://edx.org">Edx.org</a>
