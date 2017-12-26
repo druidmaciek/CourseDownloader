@@ -1,8 +1,1 @@
-{
-    "last_dir": "",
-    "credentials": [
-        "lynda": {"username": "", "pwd": ""},
-        "pluralsight": {"username": "", "pwd": ""},
-        "udemy": {"username": "", "pwd": ""}
-    ]
-}
+{"last_dir": "", "creds": {"lynda": {"username": null, "pwd": null}, "pluralsight": {"username": null, "pwd": null}, "udemy": {"username": null, "pwd": null}}}

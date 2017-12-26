@@ -8,6 +8,8 @@
     - Select which vids to download
     - Add password encryption
     - Add Skillshare to GUI
+    - Add reset local data button instead of login
+    - Add remember next time in the login
 2. course_sites:
     - Create Content file
     - Download Exercise Files
