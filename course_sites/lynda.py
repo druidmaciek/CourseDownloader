@@ -101,15 +101,15 @@ class Lynda(object):
             vids = chapter.findAll('a', {'class': 'item-name video-name ga'})
             vids = [x['href'] for x in vids]
 
-            for vid in vids:
-                self.driver.get(vid)
+            for vid in enumerate(vids):
+                self.driver.get(vid[1])
                 sleep(1)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')
                 vid_title = soup.find('h1', {'itemprop': 'name'})['data-video'].strip().replace('/', '|')
                 self.label.SetLabel(vid_title)
                 video = soup.find('video', {'class': 'player'})['data-src']
                 videos_data.append(
-                    {"path": "{}/{}/{}/{}.mp4".format(self.dir, self.course_title, chapter_title, vid_title),
+                    {"path": "{}/{}/{}/{}. {}.mp4".format(self.dir, self.course_title, chapter_title, vid[0], vid_title),
                      "source": video})
         # Close chromedriver
         self.driver.quit()

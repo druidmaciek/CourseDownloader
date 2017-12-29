@@ -82,8 +82,8 @@ class Pluralsight(object):
             .find('ul', {'class': 'accordian'}).findAll('li', {'class': 'accordian__section'})
 
         videos_data = []
-        for chapter in chapters:
-            chapter_title = chapter.find('h3').text.strip().replace('/', '|')
+        for chapter in enumerate(chapters):
+            chapter_title = chapter[0]+". "+chapter[1].find('h3').text.strip().replace('/', '|')
             print(chapter_title)
 
             self.label.SetLabel(chapter_title)
@@ -95,18 +95,18 @@ class Pluralsight(object):
 
             vids = [("https://app.pluralsight.com" + x.find('a')['href'], x.find('a').text.strip()) for x in vids]
 
-            for vid in vids:
-                self.driver.get(vid[0])
+            for vid in enumerate(vids):
+                self.driver.get(vid[1][0])
                 sleep(2)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-                vid_title = vid[1].replace('/', '|')
+                vid_title = vid[1][1].replace('/', '|')
                 self.label.SetLabel(vid_title)
                 try:
                     video = soup.find('video')['src']
                 except KeyError:
                     self.driver.quit()
                 videos_data.append(
-                    {"path": "{}/{}/{}/{}.mp4".format(self.loc, self.course_title, chapter_title, vid_title),
+                    {"path": "{}/{}/{}/{}. {}.mp4".format(self.loc, self.course_title, chapter_title, vid[0], vid_title),
                      "source": video})
 
         # Close chromedriver
