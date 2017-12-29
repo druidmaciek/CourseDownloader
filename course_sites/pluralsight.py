@@ -82,7 +82,7 @@ class Pluralsight(object):
             .find('ul', {'class': 'accordian'}).findAll('li', {'class': 'accordian__section'})
 
         videos_data = []
-        for chapter in enumerate(chapters):
+        for chapter in enumerate(chapters, 1):
             chapter_title = chapter[0]+". "+chapter[1].find('h3').text.strip().replace('/', '|')
             print(chapter_title)
 
@@ -95,7 +95,7 @@ class Pluralsight(object):
 
             vids = [("https://app.pluralsight.com" + x.find('a')['href'], x.find('a').text.strip()) for x in vids]
 
-            for vid in enumerate(vids):
+            for vid in enumerate(vids, 1):
                 self.driver.get(vid[1][0])
                 sleep(2)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')

@@ -3,7 +3,7 @@
 ## About
 
 This is a whole course downloader GUI app. Built in Python and wxPython.
-Just paste a url of a course to download a whore course.
+Just paste a url of a course to download a whole course.
 This project is my attempt to create something usable and for my educational purposes.
 
 1. Supported sites:
@@ -27,7 +27,11 @@ This project is my attempt to create something usable and for my educational pur
     - <a href="https://edx.org">Edx.org</a>
     - <a href="https://coursera.org">Coursera.com</a>
     - <a href="https://skillshare.com">Skillshare.com</a>
+    - <a href="https://youtube.com">youtube.com</a> playlists
 
+    
+    
+    
     
     
     

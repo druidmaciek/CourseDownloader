@@ -101,7 +101,7 @@ class Lynda(object):
             vids = chapter.findAll('a', {'class': 'item-name video-name ga'})
             vids = [x['href'] for x in vids]
 
-            for vid in enumerate(vids):
+            for vid in enumerate(vids, 1):
                 self.driver.get(vid[1])
                 sleep(1)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')

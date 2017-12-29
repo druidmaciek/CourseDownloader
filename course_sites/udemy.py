@@ -1,6 +1,6 @@
 """
     TO-DO:
-        - Download Exercise Files
+        - Finish projcet
 """
 from multiprocessing.pool import Pool
 from multiprocessing import cpu_count

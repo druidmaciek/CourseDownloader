@@ -19,3 +19,4 @@ setup(
     setup_requires=['py2app'], install_requires=[
         'validators', 'wxPython', 'selenium', 'bs4']
 )
+ 
