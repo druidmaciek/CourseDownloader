@@ -15,6 +15,7 @@ from threading import Thread
 from validators import url
 from course_sites.lynda import Lynda
 from course_sites.pluralsight import Pluralsight
+from data.datahandler import DataReader
 import wx, wx.html
 import sys
 
@@ -29,6 +30,66 @@ with one click<br>Supported Sites: </p>
 <p>Version: 1.0.0<br>The program is running version
  %(wxpy)s of <b>wxPython</b> and %(python)s of <b>Python</b>.</p>"""
 
+class DataDialog(wx.Dialog):
+    """Data dialog. Edit login data"""
+    def __init__(self):
+        self.reader = DataReader()
+        self.load_passwords()
+        wx.Dialog.__init__(self, None, title='Login Data', size=(300,300))
+        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
+
+
+        row_1Lbl = wx.StaticText(self, label='Lynda:')
+        self.row_1_userTxt = wx.TextCtrl(self, value=self.lynda[0])
+        self.row_1_pwdTxt = wx.TextCtrl(self, style=wx.TE_PASSWORD, value=self.lynda[1])
+        self.addWidgets(row_1Lbl, self.row_1_userTxt, self.row_1_pwdTxt)
+
+        row_2Lbl = wx.StaticText(self, label='Pluralsight:')
+        self.row_2_userTxt = wx.TextCtrl(self)
+        self.row_2_pwdTxt = wx.TextCtrl(self, style=wx.TE_PASSWORD)
+        self.addWidgets(row_2Lbl, self.row_2_userTxt, self.row_2_pwdTxt)
+
+        row_3Lbl = wx.StaticText(self, label='Skillshare:')
+        self.row_3_userTxt = wx.TextCtrl(self)
+        self.row_3_pwdTxt = wx.TextCtrl(self, style=wx.TE_PASSWORD)
+        self.addWidgets(row_3Lbl, self.row_3_userTxt, self.row_3_pwdTxt)
+
+        row_4Lbl = wx.StaticText(self, label='Udemy:')
+        self.row_4_userTxt = wx.TextCtrl(self)
+        self.row_4_pwdTxt = wx.TextCtrl(self, style=wx.TE_PASSWORD)
+        self.addWidgets(row_4Lbl, self.row_4_userTxt, self.row_4_pwdTxt)
+
+        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        okBtn = wx.Button(self, wx.ID_OK)
+        btnSizer.Add(okBtn, 0, wx.CENTER | wx.ALL, 5)
+        okBtn = wx.Button(self, label='Save')
+        okBtn.Bind(wx.EVT_BUTTON, self.onSave)
+        btnSizer.Add(okBtn, 0, wx.CENTER | wx.ALL, 5)
+        #cancelBtn = wx.Button(self, wx.ID_CANCEL)
+        #btnSizer.Add(cancelBtn, 0, wx.CENTER | wx.ALL, 5)
+        self.mainSizer.Add(btnSizer, 0, wx.CENTER)
+
+        self.SetSizer(self.mainSizer)
+
+    def addWidgets(self, lbl, txt1, txt2):
+        sizer1 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer1.Add(lbl, 0, wx.ALL, 5)
+        sizer2.Add(txt1, 1, wx.EXPAND | wx.ALL, 5)
+        sizer2.Add(txt2, 1, wx.EXPAND | wx.ALL, 5)
+        self.mainSizer.Add(sizer1, 0, wx.EXPAND | wx.ALIGN_CENTER)
+        self.mainSizer.Add(sizer2, 0, wx.EXPAND)
+
+    def load_passwords(self):
+        self.lynda = self.reader.load_login('lynda')
+
+    def onSave(self, event):
+        self.reader.save_login('lynda', self.row_1_userTxt.GetValue(), self.row_1_pwdTxt.GetValue())
+
+        dlg = wx.MessageDialog(self, "All fields saved",
+                               "", wx.OK | wx.ICON_QUESTION)
+        result = dlg.ShowModal()
+        dlg.Destroy()
 
 class LoginDialog(wx.Dialog):
     """
@@ -95,8 +156,8 @@ class AboutBox(wx.Dialog):
 class Frame(wx.Frame):
 
     def __init__(self, title):
-
-        self.save_dir = None
+        self.reader = DataReader()
+        self.save_dir = self.reader.load_last_dir()
         self.username = None
         self.pwd = None
         self.course_site = None
@@ -120,9 +181,15 @@ class Frame(wx.Frame):
 
         # Top Row: Login | Set Directory |  Quit Buttons
         top_box = wx.BoxSizer(wx.HORIZONTAL)
-        b_login = wx.Button(panel, label="Login")
+
+        b_data = wx.Button(panel, label="App Data")
+        b_data.Bind(wx.EVT_BUTTON, self.onData)
+        top_box.Add(b_data, 1, wx.ALL, 5)
+        """b_login = wx.Button(panel, label="Login")
         b_login.Bind(wx.EVT_BUTTON, self.OnLogin)
-        top_box.Add(b_login, 1, wx.ALL, 5)
+        top_box.Add(b_login, 1, wx.ALL, 5)"""
+
+
         b_set_dir= wx.Button(panel, label="Set Directory")
         b_set_dir.Bind(wx.EVT_BUTTON, self.OnDir)
         top_box.Add(b_set_dir, 1, wx.ALL, 5)
@@ -132,7 +199,7 @@ class Frame(wx.Frame):
         box.Add(top_box, 1, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 5)
 
         # Middle Rows: Dir Info | URL Input Box + Label | Text Info Log | Progress Bar
-        self.dir_text = wx.StaticText(panel, 0, "Download directory: NOT SET")
+        self.dir_text = wx.StaticText(panel, 0, "Download Directory: {0}".format(self.save_dir))
         box.Add(self.dir_text, 1, wx.EXPAND | wx.ALIGN_LEFT | wx.ALL, 5)
         box.AddSpacer(5)
         sbox1 = wx.BoxSizer(wx.HORIZONTAL)
@@ -164,6 +231,14 @@ class Frame(wx.Frame):
 
         panel.SetSizer(box)
         panel.Layout()
+
+    def onData(self, event):
+        """
+        Show login credentials window
+        """
+        dlg = DataDialog()
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def OnAbout(self, event):
         dlg = AboutBox()
@@ -203,6 +278,7 @@ class Frame(wx.Frame):
         dialog = wx.DirDialog(None, "Choose a directory:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         if dialog.ShowModal() == wx.ID_OK:
             self.save_dir = dialog.GetPath()
+            self.reader.save_last_dir(self.save_dir)
             self.dir_text.SetLabel("Download Directory: {0}".format(self.save_dir))
         dialog.Destroy()
 

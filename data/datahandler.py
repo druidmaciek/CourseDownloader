@@ -1,11 +1,12 @@
 
 import json
 import base64
-
+import os
 
 class DataReader(object):
 
     def __init__(self):
+        self.file_dir = os.getcwd()+"/data/datafile.json"
         self.data = {}
         self.load_file()
 
@@ -19,9 +20,9 @@ class DataReader(object):
         usr = self.data['creds'][site]['username']
         pwd = self.data['creds'][site]['pwd']
         try:
-            return self.decrypt(usr), self.decrypt(pwd)
+            return tuple((self.decrypt(usr), self.decrypt(pwd)))
         except TypeError:
-            return None, None
+            return tuple(("", ""))
 
     def save_last_dir(self, last_dir):
         self.data['last_dir'] = last_dir
@@ -39,11 +40,11 @@ class DataReader(object):
         return base64.b64decode(pwd).decode('utf-8')
 
     def load_file(self):
-        with open('datafile.json', 'r') as f:
+        with open(self.file_dir, 'r') as f:
             self.data = json.loads(f.read())
 
     def save_file(self):
-        with open('datafile.json', 'w') as f:
+        with open(self.file_dir, 'w') as f:
             json_string = json.dumps(self.data)
             f.write(json_string)
 
