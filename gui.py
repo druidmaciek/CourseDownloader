@@ -8,6 +8,7 @@ from threading import Thread
 from validators import url
 from course_sites.lynda import Lynda
 from course_sites.pluralsight import Pluralsight
+from course_sites.skillshare import Skillshare
 from data.datahandler import DataReader
 import wx, wx.html
 import sys
@@ -78,6 +79,9 @@ class DataDialog(wx.Dialog):
 
     def onSave(self, event):
         self.reader.save_login('lynda', self.row_1_userTxt.GetValue(), self.row_1_pwdTxt.GetValue())
+        self.reader.save_login('pluralsight', self.row_2_userTxt.GetValue(), self.row_2_pwdTxt.GetValue())
+        self.reader.save_login('skillshare', self.row_3_userTxt.GetValue(), self.row_3_pwdTxt.GetValue())
+
 
         dlg = wx.MessageDialog(self, "All fields   saved",
                                "", wx.OK | wx.ICON_QUESTION)
@@ -257,8 +261,12 @@ class Frame(wx.Frame):
                     else:
                         return
                 elif '.pluralsight' in text_url:
-                    usr, pwd = self.reader.load_login('lynda')
-                    if self.notLoggedMessage(usr, pwd, 'Lynda'):
+                    usr, pwd = self.reader.load_login('pluralsight')
+                    if self.notLoggedMessage(usr, pwd, 'Pluralsight'):
+                        self.username, self.pwd = usr, pwd
+                elif '.skillshare' in text_url:
+                    usr, pwd = self.reader.load_login('skillshare')
+                    if self.notLoggedMessage(usr, pwd, 'Skillshare'):
                         self.username, self.pwd = usr, pwd
 
 
@@ -307,14 +315,14 @@ class Frame(wx.Frame):
         :return:
         """
         url_val = self.t1.GetValue()
+        self.t1.SetValue('')
+        self.gauge.Pulse()
         if '.lynda.' in url_val:
-            self.t1.SetValue('')
-            self.gauge.Pulse()
             self.course_site = Lynda(url_val, self.username, self.pwd, self.gauge, self.text, self.save_dir)
         elif '.pluralsight.' in url_val:
-            self.t1.SetValue('')
-            self.gauge.Pulse()
             self.course_site = Pluralsight(url_val, self.username, self.pwd, self.gauge, self.text, self.save_dir)
+        elif '.skillshare.' in url_val:
+            self.course_site = Skillshare(url_val, self.username, self.pwd, self.gauge, self.text, self.save_dir)
         dlg = wx.MessageDialog(self, "All Files Downloaded.", "", wx.OK | wx.ICON_QUESTION)
         result = dlg.ShowModal()
         # dlg.Destroy()
