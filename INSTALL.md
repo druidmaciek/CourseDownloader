@@ -1,7 +1,9 @@
 ##Install and Update
 
 ###Install:
+
 #####Mac os x:
+
 ######Python3 installation:
 1. Open terminal 
 2. Install command line tools type "xcode-select --install"
@@ -19,7 +21,9 @@
 #####Widows:
 
 ###Update:
+
 #####Mac os x:
+
 1. Unzip the project
 2. Open terminal
 3. Type "cd path/to/project/"
