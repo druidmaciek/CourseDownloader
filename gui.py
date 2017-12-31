@@ -79,7 +79,7 @@ class DataDialog(wx.Dialog):
     def onSave(self, event):
         self.reader.save_login('lynda', self.row_1_userTxt.GetValue(), self.row_1_pwdTxt.GetValue())
 
-        dlg = wx.MessageDialog(self, "All fields saved",
+        dlg = wx.MessageDialog(self, "All fields   saved",
                                "", wx.OK | wx.ICON_QUESTION)
         result = dlg.ShowModal()
         dlg.Destroy()

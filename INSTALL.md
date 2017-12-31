@@ -22,7 +22,7 @@
 #####Mac os x:
 1. Unzip the project
 2. Open terminal
-3. Type "ls path/to/project/"
+3. Type "cd path/to/project/"
 4. Type "python3 setup.py py2app"
 5. Copy .app file from dist folder and replace the old .app
 
