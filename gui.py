@@ -1,15 +1,8 @@
 """
     TO DO:
         - Load urls from txt/csv file
-        - Creata data file for storing temporary info and data to save
-        - Set option to remember credentials when logging in [checkbox]
-        - Remember last directory
         - Select which vids to download
-
-    BUGS:
-        - Program gets stuck when quitted while downloading (?) IS THIS STILL A ISSUE?
-        - Dosen't download on father's mac os x
-
+        - Add reset app data button
 """
 from threading import Thread
 from validators import url
@@ -91,38 +84,6 @@ class DataDialog(wx.Dialog):
         result = dlg.ShowModal()
         dlg.Destroy()
 
-class LoginDialog(wx.Dialog):
-    """
-    Login dialog. Shows ups when the user wants to download from the site requiring logging into.
-    """
-    def __init__(self):
-        wx.Dialog.__init__(self, None, title="Login", size=(300, 125))
-        self.mainSizer = wx.BoxSizer(wx.VERTICAL)
-        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        userLbl = wx.StaticText(self, label="Username:")
-        self.userTxt = wx.TextCtrl(self)
-        self.addWidgets(userLbl, self.userTxt)
-        passLbl = wx.StaticText(self, label="Password:")
-        self.passTxt = wx.TextCtrl(self, style=wx.TE_PASSWORD)
-        self.addWidgets(passLbl, self.passTxt)
-        okBtn = wx.Button(self, wx.ID_OK)
-        btnSizer.Add(okBtn, 0, wx.CENTER | wx.ALL, 5)
-        cancelBtn = wx.Button(self, wx.ID_CANCEL)
-        btnSizer.Add(cancelBtn, 0, wx.CENTER | wx.ALL, 5)
-        self.mainSizer.Add(btnSizer, 0, wx.CENTER)
-        self.SetSizer(self.mainSizer)
-
-    def addWidgets(self, lbl, txt):
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.Add(lbl, 0, wx.ALL | wx.CENTER, 5)
-        sizer.Add(txt, 1, wx.EXPAND | wx.ALL, 5)
-        self.mainSizer.Add(sizer, 0, wx.EXPAND)
-
-    def get_creds(self):
-        """
-        :return: Returns a tuple with username&password
-        """
-        return (self.userTxt.GetValue(), self.passTxt.GetValue())
 
 
 class HtmlWindow(wx.html.HtmlWindow):
@@ -254,26 +215,6 @@ class Frame(wx.Frame):
         if result == wx.ID_OK:
             self.Destroy()
 
-    def OnLogin(self, event):
-        """
-        Show login window to set username nad pwd values
-        """
-        self.logged = True
-        dlg = LoginDialog()
-        dlg.ShowModal()
-        self.username, self.pwd = dlg.get_creds()
-        dlg.Destroy()
-
-    def loginn(self):
-        """
-        Show login window to set username nad pwd values
-        """
-        self.logged = True
-        dlg = LoginDialog()
-        dlg.ShowModal()
-        self.username, self.pwd = dlg.get_creds()
-        dlg.Destroy()
-
     def OnDir(self, event):
         dialog = wx.DirDialog(None, "Choose a directory:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
         if dialog.ShowModal() == wx.ID_OK:
@@ -307,13 +248,19 @@ class Frame(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
             if result == wx.ID_OK:
-                if 'lynda.' or '.pluralsight.' in text_url:
-                    if self.username is None or self.pwd is None:
-                        dlg = wx.MessageDialog(self, "Please login into your account.",
-                                               "User not logged in", wx.OK | wx.ICON_QUESTION)
-                        result = dlg.ShowModal()
-                        dlg.Destroy()
-                        self.loginn()
+
+                if '.lynda' in text_url:
+                    usr, pwd = self.reader.load_login('lynda')
+                    logged = self.notLoggedMessage(usr, pwd, 'Lynda')
+                    if logged:
+                        self.username, self.pwd = usr, pwd
+                    else:
+                        return
+                elif '.pluralsight' in text_url:
+                    usr, pwd = self.reader.load_login('lynda')
+                    if self.notLoggedMessage(usr, pwd, 'Lynda'):
+                        self.username, self.pwd = usr, pwd
+
 
                 # Run the check_site function on separate thread
                 self.testThread = Thread(target=self.check_site)
@@ -333,6 +280,15 @@ class Frame(wx.Frame):
             result = dlg.ShowModal()
             dlg.Destroy()
         event.Skip()
+
+    def notLoggedMessage(self, usr, pwd, site):
+        if not usr or not pwd:
+            dlg = wx.MessageDialog(self, "Please login into your {} account.".format(site),
+                                   "User not logged in", wx.OK | wx.ICON_QUESTION)
+            result = dlg.ShowModal()
+            dlg.Destroy()
+            return False
+        return True
 
     def PollThread(self, event):
         if self.testThread.isAlive():

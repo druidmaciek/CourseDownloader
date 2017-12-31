@@ -3,6 +3,7 @@
         - Download Exercise Files
         - select which vids to download
         - Path URL support
+        - Add selenium.common.exceptions.NoSuchElementException: to password-input
 """
 from multiprocessing.pool import Pool
 from multiprocessing import cpu_count
@@ -127,5 +128,5 @@ class Lynda(object):
         results = pool.map(self.download_vid, self.videos_data)"""
 
     def download_vids(self):
-        [self.download_vid(x) for x in self.videos_data]
+        [self.download_vid(x) for x in self.vid_data]
 
