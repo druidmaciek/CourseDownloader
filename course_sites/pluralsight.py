@@ -113,10 +113,13 @@ class Pluralsight(object):
         self.driver.quit()
         return videos_data
 
-    @staticmethod
-    def download_vid(data):
-        urllib.request.urlretrieve(data['source'], data['path'])
+        # Temporary commented out to check if its the reason of errors
+
+    """
+    def download_vids(self):
+        pool = Pool(cpu_count() * 4)
+        results = pool.map(self.download_vid, self.videos_data)"""
 
     def download_vids(self):
-        pool = Pool(cpu_count() * 2)
-        results = pool.map(self.download_vid, self.vid_data)
+        [self.download_vid(x) for x in self.vid_data]
+
