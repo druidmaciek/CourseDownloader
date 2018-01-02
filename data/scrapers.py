@@ -1,34 +1,19 @@
-"""
-    TO-DO:
-        - Download Exercise Files
-        - select which vids to download
-        - Path URL support
-        - Add selenium.common.exceptions.NoSuchElementException: to password-input
-"""
 from selenium import webdriver
+import os
 from time import sleep
 from bs4 import BeautifulSoup
-import os
-import urllib.request
-import wx
 
-class Lynda(object):
 
-    """
-        :param course_url: URL of a course from Lynda.com | Example: https://www.lynda.com/Leadership-Management-tutorials/Managing-Technical-Professionals/628686-2.html
-        :param user: username or email associated with Lynda.com Account
-        :param pwd: password associated with Lynda.com Account
-        :param gauge: wxPython Gauge object
-        :param label: wxPython Label object
-        :param dir: path for downloading files
-        """
-    def __init__(self, course_url, user, pwd, gauge, label, dir):
-        self.dir = dir
-        self.course_url = course_url
+
+class Scraper(object):
+
+
+    def __init__(self, url, user, pwd, label, save_dir):
+        self.course_url = url.strip()
         self.user = user
         self.pwd = pwd
-        self.gauge = gauge
         self.label = label
+        self.save_dir = save_dir
 
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -37,27 +22,26 @@ class Lynda(object):
         self.driver.get(self.course_url)
         self.label.SetLabel("Logging in...")
         self.login()
+        self.soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         self.course_title = self.get_title()
+        self.vid_data = []
+
         if self.course_title is not None:
             self.label.SetLabel("Course: {}".format(self.course_title))
             try:
-                os.makedirs("{}/{}".format(self.dir, self.course_title))
+                os.makedirs("{}/{}".format(self.save_dir, self.course_title))
             except FileExistsError:
                 pass
+            self.get_vid_data()
+            self.driver.quit()
 
-            self.vid_data = self.get_vid_data()
+    def getVidData(self):
+        return self.vid_data
 
 
-
-            self.label.SetLabel("Downloading...")
-            self.download_vids()
-
+class Lynda(Scraper):
 
     def login(self):
-        """
-        Login into Lynda.com
-
-        """
         self.driver.find_element_by_xpath('//*[@id="submenu-login"]/li[1]/a').click()
         sleep(2)
         self.driver.find_element_by_id("email-address").send_keys(self.user)
@@ -69,14 +53,12 @@ class Lynda(object):
 
     def get_title(self):
         """
-        set self.soup with BeautifulSoup obj
         :return: string with course title
         """
-        self.soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         try:
             title = self.soup.find('h1', {'class': 'default-title', 'itemprop': 'name'}).text.strip().replace('/', '|')
         except AttributeError:
-            self.label.SetLabel("It's not a course url...")
+            self.label.SetLabel("It's not a course url or login/password is wrong...")
             title = None
         return title
 
@@ -86,49 +68,34 @@ class Lynda(object):
         :return: List of dictionarys where dict['source'] is url to video and dict['path']
         string with path to save file to
         """
-        chapters = self.soup.find('ul', {'class': 'course-toc toc-container autoscroll'}) \
-            .findAll('li',{'role': 'presentation'})
+        chapters = self.soup.find('ul', {'class': 'course-toc toc-container autoscroll'})\
+            .findAll('li', {'role': 'presentation'})
 
-        videos_data = []
+        vid_index = 1
         for chapter in chapters:
             try:
-                chapter_title = chapter.find('div', {'class': 'row chapter-row'}) \
+                chapter_title = chapter.find('div', {'class': 'row chapter-row'})\
                     .find('h4').text.strip().replace('/', '|')
             except AttributeError:
                 continue
             self.label.SetLabel(chapter_title)
             try:
-                os.makedirs("{}/{}/{}".format(self.dir, self.course_title, chapter_title))
+                os.makedirs("{}/{}/{}".format(self.save_dir, self.course_title, chapter_title))
             except FileExistsError:
                 pass
             vids = chapter.findAll('a', {'class': 'item-name video-name ga'})
             vids = [x['href'] for x in vids]
 
-            for vid in enumerate(vids, 1):
-                self.driver.get(vid[1])
+
+            for vid in vids:
+                self.driver.get(vid)
                 sleep(1)
                 soup = BeautifulSoup(self.driver.page_source, 'html.parser')
                 vid_title = soup.find('h1', {'itemprop': 'name'})['data-video'].strip().replace('/', '|')
                 self.label.SetLabel(vid_title)
                 video = soup.find('video', {'class': 'player'})['data-src']
-                videos_data.append(
-                    {"path": "{}/{}/{}/{}. {}.mp4".format(self.dir, self.course_title, chapter_title, vid[0], vid_title),
-                     "source": video, 'chapter': chapter_title})
-        # Close chromedriver
-        self.driver.quit()
 
-        return videos_data
-
-    @staticmethod
-    def download_vid(data):
-        urllib.request.urlretrieve(data['source'], data['path'])
-
-    # Temporary commented out to check if its the reason of errors
-    """
-    def download_vids(self):
-        pool = Pool(cpu_count() * 4)
-        results = pool.map(self.download_vid, self.videos_data)"""
-
-    def download_vids(self):
-        [self.download_vid(x) for x in self.vid_data]
+                self.vid_data.append({"path": "{}/{}/{}/{}. {}.mp4".format(self.save_dir, self.course_title, chapter_title, vid_index, vid_title), 'course': self.course_title, 'chapter': chapter_title, 'source': video,'name': "{}. {}.mp4".format(vid_index, vid_title)})
+                vid_index += 1
+                #self.vid_data[self.course_title][chapter_title].append({'source': video,'name': "{}. {}.mp4".format(vid[0], vid_title)})
 

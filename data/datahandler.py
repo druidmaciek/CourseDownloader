@@ -48,5 +48,5 @@ class DataReader(object):
             f.write(json_string)
 
     def reset_data(self):
-        self.data = {"last_dir": "", "creds": {"lynda": {"username": None, "pwd": None}, "pluralsight": {"username": None, "pwd": None}, "udemy": {"username": None, "pwd": None}}}
+        self.data = {"last_dir": "", "creds": {"Lynda": {"username": None, "pwd": None}, "Skillshare¡": {"username": None, "pwd": None}, "Pluralsight": {"username": None, "pwd": None}, "Udemy": {"username": None, "pwd": None}}}
         self.save_file()
