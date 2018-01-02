@@ -1,3 +1,7 @@
+"""
+    TODO:
+    - encrypt whole file not just username and pwd
+"""
 import json
 import base64
 import os

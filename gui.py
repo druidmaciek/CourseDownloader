@@ -1,3 +1,7 @@
+"""
+    TODO:
+    - in LoginDialog add dialog after clean data button is pressed
+"""
 import urllib
 import wx
 import wx.html

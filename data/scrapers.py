@@ -1,3 +1,9 @@
+"""
+    TODO:
+     - Test Skillshare
+     - Finish Udemy
+     - Add more classes
+"""
 from selenium import webdriver
 import os
 from time import sleep
