@@ -108,8 +108,6 @@ class MainFrame(wx.Frame):
         # Progress bar
         self.gauge = wx.Gauge(self.panel, range=20, size=(300, 1), style=wx.GA_HORIZONTAL)
         box.Add(self.gauge, proportion=1, flag=wx.ALIGN_CENTER)
-        self.gauge1 = wx.Gauge(self.panel, range=20, size=(300, 1), style=wx.GA_HORIZONTAL)
-        box.Add(self.gauge1, proportion=1, flag=wx.ALIGN_CENTER)
 
         # Bottom Row: Start | Download | Quit Buttons
         bottom_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -159,7 +157,7 @@ class MainFrame(wx.Frame):
 
 
     def onDownload(self, event):
-
+        self.gauge.Pulse()
         self.testThread = Thread(target=self.download)
         self.testThread.start()
         self.b_down.Disable()
@@ -177,8 +175,7 @@ class MainFrame(wx.Frame):
             if data[row]:
                 num += 1
         self.text.SetLabel("Downloading: 0/{}".format(num))
-        self.gauge1.SetRange(num)
-        self.gauge1.SetValue(0)
+
 
         prog = 0
         for row in range(count):
@@ -186,8 +183,6 @@ class MainFrame(wx.Frame):
                 path = self.list.GetItem(row, 3).GetText()
                 source = self.list.GetItem(row, 2).GetText()
                 self.count += 1
-                self.gauge1.SetValue(self.count)
-                wx.Yield()
                 sleep(1)
                 urllib.request.urlretrieve(source, path)
                 prog += 1
@@ -203,6 +198,7 @@ class MainFrame(wx.Frame):
                                "Downloading complete", wx.OK | wx.ICON_QUESTION)
         dlg.ShowModal()
         dlg.Destroy()
+        self.gauge.SetValue(0)
 
     def onStart(self, event):
         """

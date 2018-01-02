@@ -1,7 +1,7 @@
 """
     TODO:
      - Test Skillshare
-     - Finish Udemy
+     - Finish Udemy & Groove3
      - Add more classes
 """
 from selenium import webdriver
@@ -18,7 +18,7 @@ class Scraper(object):
         self.pwd = pwd
         self.label = label
         self.save_dir = save_dir
-
+        self.error_message = "It's not a course url or login/password is wrong..."
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
         self.driver = webdriver.Chrome('{}/data/chromedriver'.format(os.getcwd()), chrome_options=options)
@@ -27,7 +27,7 @@ class Scraper(object):
         self.label.SetLabel("Logging in...")
         self.login()
         self.soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-        self.course_title = self.get_title()
+        self.get_title()
         self.vid_data = []
 
         if self.course_title is not None:
@@ -39,11 +39,15 @@ class Scraper(object):
             self.get_vid_data()
             self.driver.quit()
 
+
+
+
     def getVidData(self):
         return self.vid_data
 
 
 class Lynda(Scraper):
+
 
     def login(self):
         self.driver.find_element_by_xpath('//*[@id="submenu-login"]/li[1]/a').click()
@@ -60,11 +64,11 @@ class Lynda(Scraper):
         :return: string with course title
         """
         try:
-            title = self.soup.find('h1', {'class': 'default-title', 'itemprop': 'name'}).text.strip().replace('/', '|')
+            self.course_title = self.soup.find('h1', {'class': 'default-title', 'itemprop': 'name'}).text.strip().replace('/', '|')
         except AttributeError:
-            self.label.SetLabel("It's not a course url or login/password is wrong...")
-            title = None
-        return title
+            self.label.SetLabel(self.error_message)
+            self.course_title = None
+
 
     def get_vid_data(self):
         """
@@ -120,11 +124,11 @@ class Pluralsight(Scraper):
         :return: string with course title
         """
         try:
-            title = self.soup.find('h1', {'class': 'course-hero__title'}).text.strip().replace('/', '|')
+            self.course_title = self.soup.find('h1', {'class': 'course-hero__title'}).text.strip().replace('/', '|')
         except AttributeError:
-            self.label.SetLabel("It's not a course url...")
-            title = None
-        return title
+            self.label.SetLabel(self.error_message)
+            self.course_title = None
+
 
     def get_vid_data(self):
         """
@@ -180,11 +184,11 @@ class Skillshare(Scraper):
         :return: string with course title
         """
         try:
-            title = self.soup.find('div', {'class': 'class-details-header-title'}).text.strip().replace('/', '|')
+            self.course_title = self.soup.find('div', {'class': 'class-details-header-title'}).text.strip().replace('/', '|')
         except AttributeError:
-            self.label.SetLabel("It's not a course url...")
-            title = None
-        return title
+            self.label.SetLabel(self.error_message)
+            self.course_title = None
+
 
     def get_vid_data(self):
         """
@@ -202,6 +206,28 @@ class Skillshare(Scraper):
             self.vid_data.append(
                 {"course": self.course_title, 'chapter': None, "path": "{}/{}/{}.mp4".format(self.dir, self.course_title, vid_title),
                  "source": video})
+
+class Groove(Scraper):
+
+    def login(self):
+        self.driver.find_element_by_xpath('//*[@id="bs-example-navbar-collapse-1"]/ul[1]/li[6]/a').click()
+        sleep(2)
+        self.driver.find_element_by_id('inputUsername').send_keys(self.user)
+        self.driver.find_element_by_id('inputPassword').send_keys(self.pwd)
+        self.driver.find_element_by_xpath('//*[@id="main"]/div/div/form/input').click()
+        sleep(2)
+
+    def get_title(self):
+        """
+        :return: string with course title
+        """
+        try:
+            self.course_title = self.soup.find('h1', {'itemprop': 'name'}).text.strip().replace('/', '|')
+        except AttributeError:
+            self.label.SetLabel(self.error_message)
+            self.course_title = None
+
+
 
 class Udemy(Scraper):
     pass
