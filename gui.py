@@ -238,7 +238,7 @@ class MainFrame(wx.Frame):
                 site = text_url[text_url.find('.') + 1:]
                 site = site[:site.find('.') + 1]
                 sites = {'lynda.': 'Lynda', 'pluralsight.': 'Pluralsight',
-                         'skillshare.': 'Skillshare'}
+                         'skillshare.': 'Skillshare', 'udemy.': 'Udemy'}
                 sleep(1)
                 username, pwd = self.reader.load_login(sites[site])
                 if self.notLoggedMessage(username, pwd, sites[site]):
@@ -267,9 +267,9 @@ class MainFrame(wx.Frame):
         if self.course_site == 'Lynda':
             scraper = Lynda(text_url, self.username, self.pwd, self.text, self.save_dir)
         elif self.course_site == 'Pluralsight':
-            pass
+            scraper = Pluralsight(text_url, self.username, self.pwd, self.text, self.save_dir)
         elif self.course_site == 'Skillshare':
-            pass
+            scraper = Skillshare(text_url, self.username, self.pwd, self.text, self.save_dir)
         self.vid_data = scraper.vid_data
         self.b_down.Enable()
         for i in enumerate(self.vid_data, 1):
