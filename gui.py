@@ -400,6 +400,12 @@ class LoginDialog(wx.Dialog):
 
     def onClear(self, event):
         self.reader.reset_data()
+        self.userTxt.SetValue('')
+        self.pwdTxt.SetValue('')
+        dlg = wx.MessageDialog(self, "All data erased...",
+                               "", wx.OK | wx.ICON_QUESTION)
+        result = dlg.ShowModal()
+        dlg.Destroy()
 
     def onClose(self, event):
         self.Destroy()
