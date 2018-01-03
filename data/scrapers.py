@@ -25,7 +25,7 @@ class Scraper(object):
         self.error_message = "It's not a course url or login/password is wrong..."
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
-        self.driver = webdriver.Chrome('{}/data/chromedriver'.format(os.getcwd()), chrome_options=options)
+        self.driver = webdriver.Chrome()#webdriver.Chrome('{}/data/chromedriver'.format(os.getcwd()), chrome_options=options)
         self.driver.set_window_size(2000, 2000)
         self.driver.get(self.course_url)
         self.label.SetLabel("Logging in...")
@@ -36,15 +36,17 @@ class Scraper(object):
 
         if self.course_title is not None:
             self.label.SetLabel("Course: {}".format(self.course_title))
-            try:
-                os.makedirs("{}/{}".format(self.save_dir, self.course_title))
-            except FileExistsError:
-                pass
+            self.create_folder(self.save_dir, self.course_title)
             self.get_vid_data()
             self.driver.quit()
 
 
 
+    def create_folder(self, path):
+        try:
+            os.makedirs(path)
+        except FileExistsError:
+            pass
 
     def getVidData(self):
         return self.vid_data
@@ -91,10 +93,11 @@ class Lynda(Scraper):
             except AttributeError:
                 continue
             self.label.SetLabel(chapter_title)
-            try:
+            self.create_folder("{}/{}/{}".format(self.save_dir, self.course_title, chapter_title))
+            """try:
                 os.makedirs("{}/{}/{}".format(self.save_dir, self.course_title, chapter_title))
             except FileExistsError:
-                pass
+                pass"""
             vids = chapter.findAll('a', {'class': 'item-name video-name ga'})
             vids = [x['href'] for x in vids]
 
@@ -148,10 +151,11 @@ class Pluralsight(Scraper):
             chapter_title = chapter[0] + ". " + chapter[1].find('h3').text.strip().replace('/', '|')
 
             self.label.SetLabel(chapter_title)
-            try:
+            self.create_folder("{}/{}/{}".format(self.save_dir, self.course_title, chapter_title))
+            """try:
                 os.makedirs("{}/{}/{}".format(self.save_dir, self.course_title, chapter_title))
             except FileExistsError:
-                pass
+                pass"""
             vids = chapter.find('ul', {'class': 'table-of-contents__clip-list'}).findAll('li')
             vids = [("https://app.pluralsight.com" + x.find('a')['href'], x.find('a').text.strip()) for x in vids]
 
@@ -231,7 +235,18 @@ class Groove(Scraper):
             self.label.SetLabel(self.error_message)
             self.course_title = None
 
+    def getVidData(self):
+        pass
+
+
 
 
 class Udemy(Scraper):
     pass
+
+class Bob(object):
+    def __init__(self):
+        self.b = 'b'
+    def SetLabel(self, e):
+        w = e
+test = Groove('https://www.groove3.com/tutorials/Creating-Epic-Cinematic-Compositions', 'Noelsis', 'groove453973', Bob(), None)
