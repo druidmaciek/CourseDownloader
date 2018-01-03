@@ -1,4 +1,8 @@
 """
+    __author__ = "Druidmaciek"
+    __version__ = "1.0.1"
+    __maintainer__ = "Druidmaciek"
+
     TODO:
      - Test Skillshare
      - Finish Udemy & Groove3

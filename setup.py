@@ -8,8 +8,8 @@ OPTIONS = {
            'iconfile': 'data/icon.icns',
            'plist': {
                 'CFBundleName': 'Course Downloader',
-                'CFBundleShortVersionString':'1.0.0', # must be in X.X.X format
-                'CFBundleVersion': '1.0.0'}
+                'CFBundleShortVersionString':'1.0.1', # must be in X.X.X format
+                'CFBundleVersion': '1.0.1'}
 }
 
 setup(

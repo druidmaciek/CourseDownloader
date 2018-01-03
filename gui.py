@@ -1,4 +1,7 @@
 """
+     __author__ = "Druidmaciek"
+    __version__ = "1.0.1"
+    __maintainer__ = "Druidmaciek"
     TODO:
     - in LoginDialog add dialog after clean data button is pressed
 """
@@ -21,7 +24,7 @@ with one click<br>Supported Sites: </p>
 <li><a href="https://pluralsight.com">Pluralsight.com</a></li>
 </ul>
 <br>
-<p>Version: 1.0.0<br>The program is running version
+<p>Version: 1.0.1<br>The program is running version
  %(wxpy)s of <b>wxPython</b> and %(python)s of <b>Python</b>.</p>"""
 
 
