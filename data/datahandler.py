@@ -1,10 +1,6 @@
 """
-    __author__ = "Druidmaciek"
-    __version__ = "1.0.1"
-    __maintainer__ = "Druidmaciek"
-
     TODO:
-    - encrypt whole file not just username and pwd
+        - encrypt whole file not just username and pwd
 """
 import json
 import base64

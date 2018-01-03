@@ -3,7 +3,7 @@
     __version__ = "1.0.1"
     __maintainer__ = "Druidmaciek"
     TODO:
-    - in LoginDialog add dialog after clean data button is pressed
+    - Add Groove3, Udemy, Youtube
 """
 import urllib
 import wx
