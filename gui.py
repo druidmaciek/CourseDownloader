@@ -17,11 +17,12 @@ import wx.lib.mixins.listctrl as listmix
 
 
 aboutText = """<p>Course Downloader is a application 
-for downloading whole video courses from premium and free sites
+for downloading whole video courses from premium(if you have an account) and free sites
 with one click<br>Supported Sites: </p>
 <ul>
 <li><a href="https://lynda.com">Lynda.com</a></li>
 <li><a href="https://pluralsight.com">Pluralsight.com</a></li>
+<li><a href="https://skillshare.com">Skillshare.com</a>(Not Tested)</li>
 </ul>
 <br>
 <p>Version: 1.0.1<br>The program is running version
